@@ -12,7 +12,6 @@ part of 'detect_web_service.dart';
 
 class _DetectWebService implements DetectWebService {
   _DetectWebService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://10.0.2.2:3000/';
   }
 
   final Dio _dio;
