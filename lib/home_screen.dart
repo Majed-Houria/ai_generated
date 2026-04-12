@@ -95,24 +95,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
 
-              // 2. Scanning AI Radar
-              Positioned(
-                top: -100.h,
-                left: -100.w,
-                child: AnimatedBuilder(
-                  animation: _scanController,
-                  builder: (context, child) {
-                    return CustomPaint(
-                      size: Size(400.w, 400.w),
-                      painter: _RadarScanPainter(
-                        progress: _scanController.value,
-                        color: _accent.withValues(alpha: 0.08),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
               // 3. Glowing Orbs
               AnimatedBuilder(
                 animation: _floatController,
@@ -164,8 +146,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               _buildHowItWorks(),
                               SizedBox(height: 50.h),
                               _buildAboutSection(),
-                              SizedBox(height: 50.h),
-                              _buildFooter(),
                               SizedBox(height: 40.h),
                             ],
                           ),
@@ -285,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               SizedBox(width: 10.w),
               Text(
-                'الشبكة العصبية جاهزة للتحليل',
+                'الشبكة العصبونية جاهزة للتحليل',
                 style: GoogleFonts.tajawal(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w700,
@@ -608,35 +588,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildFooter() {
-    return Column(
-      children: [
-        Divider(color: _borderDark, thickness: 1),
-        SizedBox(height: 20.h),
-        Wrap(
-          spacing: 20.w,
-          runSpacing: 10.h,
-          alignment: WrapAlignment.center,
-          children: [
-            _FooterLink('من نحن'),
-            _FooterLink('السياسة والخصوصية'),
-            _FooterLink('اتصل بنا'),
-            _FooterLink('الشروط'),
-          ],
-        ),
-        SizedBox(height: 20.h),
-        Text(
-          '© 2026 درع الذكاء الاصطناعي. جميع الحقوق محفوظة.',
-          style: GoogleFonts.tajawal(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
-            color: _textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
-
   // Triggered when clicking an action, reveals AI loading popup
   void _showAILoadingDialog() {
     showDialog(
@@ -704,26 +655,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         );
       },
-    );
-  }
-}
-
-class _FooterLink extends StatelessWidget {
-  final String text;
-  const _FooterLink(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Text(
-        text,
-        style: GoogleFonts.tajawal(
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w600,
-          color: const Color(0xFF94A3B8),
-        ),
-      ),
     );
   }
 }
@@ -1011,38 +942,6 @@ class _NeuralNetworkPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _NeuralNetworkPainter oldDelegate) {
-    return oldDelegate.progress != progress;
-  }
-}
-
-class _RadarScanPainter extends CustomPainter {
-  final double progress;
-  final Color color;
-
-  _RadarScanPainter({required this.progress, required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-
-    final paint = Paint()
-      ..shader = SweepGradient(
-        colors: [
-          color.withValues(alpha: 0),
-          color.withValues(alpha: 0.5),
-          color,
-          color.withValues(alpha: 0)
-        ],
-        stops: const [0.0, 0.4, 0.5, 0.55],
-        transform: GradientRotation(progress * 2 * math.pi),
-      ).createShader(Rect.fromCircle(center: center, radius: radius));
-
-    canvas.drawCircle(center, radius, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _RadarScanPainter oldDelegate) {
     return oldDelegate.progress != progress;
   }
 }
