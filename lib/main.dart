@@ -2,10 +2,12 @@ import 'package:ai_generated/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'constants/asset_paths.dart';
 import 'di/dependency_injection.dart';
+import 'features_pages/logic/detect_image_cubit.dart';
 import 'home_screen.dart';
 import 'localization/localization_service.dart';
 
@@ -53,7 +55,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       designSize: const Size(402, 874), /// responsive
       minTextAdapt: true,
       splitScreenMode: true,
-      child: MaterialApp(
+      child:  MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => getIt<DetectImageCubit>()),
+        ],
+        child : MaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: widget.appRouter.generateRoute,
           localizationsDelegates: context.localizationDelegates,
@@ -62,6 +68,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           locale: context.locale,
           home: HomeScreen(),
         ),
+      ),
     );
   }
 }
