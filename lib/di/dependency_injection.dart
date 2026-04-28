@@ -4,6 +4,7 @@ import "package:get_it/get_it.dart";
 import '../features_pages/data/repository/detect_repository.dart';
 import '../features_pages/data/web_services/detect_web_service.dart';
 import '../features_pages/logic/detect_image_cubit.dart';
+import '../features_pages/logic/detect_text_cubit.dart';
 import '../networking/dio_factory.dart';
 
 final getIt = GetIt.instance;
@@ -26,6 +27,9 @@ Future<void> setupGetIt() async {
   // Cubits
   getIt.registerFactory<DetectImageCubit>(
     () => DetectImageCubit(getIt<DetectRepository>()),
+  );
+  getIt.registerFactory<DetectTextCubit>(
+    () => DetectTextCubit(getIt<DetectRepository>()),
   );
 
   // Secure Storage Helper

@@ -12,6 +12,7 @@ part of 'detect_web_service.dart';
 
 class _DetectWebService implements DetectWebService {
   _DetectWebService(this._dio, {this.baseUrl, this.errorLogger}) {
+    baseUrl ??= 'http://172.20.10.4:3000/';
   }
 
   final Dio _dio;
@@ -40,6 +41,34 @@ class _DetectWebService implements DetectWebService {
     late DetectImage _value;
     try {
       _value = DetectImage.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<DetectText> detectText(Map<String, dynamic> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<DetectText>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'detect/text/',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DetectText _value;
+    try {
+      _value = DetectText.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

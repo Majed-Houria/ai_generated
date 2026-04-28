@@ -242,7 +242,7 @@ class _ImageAnalysisPageState extends State<ImageAnalysisPage> with TickerProvid
               image: _selectedImage != null
                   ? DecorationImage(
                       image: FileImage(File(_selectedImage!.path)),
-                      fit: BoxFit.cover,
+                fit: BoxFit.contain,
                     )
                   : null,
             ),

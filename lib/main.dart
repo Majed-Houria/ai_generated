@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'constants/asset_paths.dart';
 import 'di/dependency_injection.dart';
 import 'features_pages/logic/detect_image_cubit.dart';
+import 'features_pages/logic/detect_text_cubit.dart';
 import 'home_screen.dart';
 import 'localization/localization_service.dart';
 
@@ -58,6 +59,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       child:  MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => getIt<DetectImageCubit>()),
+          BlocProvider(create: (context) => getIt<DetectTextCubit>()),
         ],
         child : MaterialApp(
           debugShowCheckedModeBanner: false,
