@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import '../storage/secure_storage_token.dart';
 import 'api_constants.dart';
 
 class DioFactory {
@@ -15,13 +16,17 @@ class DioFactory {
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         responseType: ResponseType.json,
-
       ),
     );
+    final storage = SecureStorageToken();
 
     _dio!.interceptors.add(
       QueuedInterceptorsWrapper(
         onRequest: (options, handler) async {
+          final token = await storage.getToken();
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
           return handler.next(options);
         },
         onError: (DioException error, handler) async {

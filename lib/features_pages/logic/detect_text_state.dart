@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../networking/api_error_handler.dart';
-import '../data/models/detect_image.dart';
 import '../data/models/detect_text.dart';
 
 part 'detect_text_state.freezed.dart';

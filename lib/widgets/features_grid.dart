@@ -6,7 +6,6 @@ import 'feature_card.dart';
 
 import '../features_pages/ui/image_analysis_page.dart';
 import '../features_pages/ui/video_analysis_page.dart';
-import '../features_pages/ui/voice_analysis_page.dart';
 import '../features_pages/ui/text_analysis_page.dart';
 
 class FeaturesGrid extends StatelessWidget {
@@ -28,13 +27,6 @@ class FeaturesGrid extends StatelessWidget {
         'icon': LucideIcons.video,
         'color': ColorsManager.warning,
         'page': const VideoAnalysisPage(),
-      },
-      {
-        'title': 'فحص الأصوات',
-        'desc': 'اكتشف الأصوات المُستنسخة والمقلدة بدقة تفوق الأذن البشرية.',
-        'icon': LucideIcons.mic,
-        'color': ColorsManager.highlight,
-        'page': const VoiceAnalysisPage(),
       },
       {
         'title': 'التأكد من النصوص',

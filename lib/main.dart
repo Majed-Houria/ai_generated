@@ -5,10 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'auth/logic/login_cubit.dart';
+import 'auth/logic/register_cubit.dart';
 import 'constants/asset_paths.dart';
 import 'di/dependency_injection.dart';
 import 'features_pages/logic/detect_image_cubit.dart';
 import 'features_pages/logic/detect_text_cubit.dart';
+import 'features_pages/logic/detect_video_cubit.dart';
 import 'home_screen.dart';
 import 'localization/localization_service.dart';
 
@@ -60,6 +63,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         providers: [
           BlocProvider(create: (context) => getIt<DetectImageCubit>()),
           BlocProvider(create: (context) => getIt<DetectTextCubit>()),
+          BlocProvider(create: (context) => getIt<RegisterCubit>()),
+          BlocProvider(create: (context) => getIt<LoginCubit>()),
+          BlocProvider(create: (context) => getIt<DetectVideoCubit>()),
         ],
         child : MaterialApp(
           debugShowCheckedModeBanner: false,

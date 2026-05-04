@@ -14,9 +14,18 @@ import 'widgets/how_it_works_section.dart';
 import 'widgets/about_section.dart';
 import 'widgets/glow_circle.dart';
 
-// =============================================================
-// AI Detection Platform - Cyber Teal Theme (Arabic RTL)
-// =============================================================
+/// [HomeScreen] is the main landing page of the AI Detection Platform.
+/// 
+/// This screen follows the "Cyber Teal" visual identity, characterized by:
+/// *   **Deep Blue/Dark Backgrounds:** Using a gradient from [ColorsManager.bgStart] to [ColorsManager.bgEnd].
+/// *   **Teal Primary Accents:** Using [ColorsManager.primary] for key elements and calls to action.
+/// *   **Neon Cyber Aesthetic:** Incorporating glowing orbs ([GlowCircle]) and neural network background animations.
+/// *   **Modern Typography:** Using the 'Tajawal' font family for a clean, professional Arabic look.
+/// 
+/// The screen features several animated components:
+/// *   `NeuralNetworkPainter`: A background animation simulating a connected AI network.
+/// *   `HomeLogo`: An animated central logo.
+/// *   `ScannerMockup`: A visual representation of the AI scanning process.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -37,22 +46,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    // Animation to fade in content on load
     _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
+    // General scanning animation
     _scanController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
     )..repeat();
+    // Floating effect for UI elements
     _floatController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat(reverse: true);
+    // Slow rotation/pulse for the neural network background
     _neuralController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 20),
     )..repeat();
+    // Line scanning animation for the mockup
     _lineScanController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2500),
@@ -72,11 +86,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  /// Animates the scroll to the features section.
   void _scrollToFeatures() {
     final context = _featuresKey.currentContext;
     if (context != null) {
-      Scrollable.ensureVisible(
-        context,
+      final box = context.findRenderObject() as RenderBox;
+      final position = box.localToGlobal(Offset.zero);
+
+      final offset = _scrollController.offset + position.dy - 120.h;
+
+      _scrollController.animateTo(
+        offset,
         duration: const Duration(milliseconds: 800),
         curve: Curves.easeInOutCubic,
       );
