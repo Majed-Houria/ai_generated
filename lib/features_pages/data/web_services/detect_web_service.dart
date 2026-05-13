@@ -4,6 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../../../networking/api_constants.dart';
 import '../models/detect_video.dart';
+import '../models/histories_image.dart';
+import '../models/histories_text.dart';
+import '../models/histories_video.dart';
 
 part 'detect_web_service.g.dart';
 
@@ -20,4 +23,13 @@ DetectWebService{
 
   @POST(ApiConstants.detectText)
   Future<DetectText> detectText(@Body() Map<String, dynamic> body);
+
+  @GET(ApiConstants.historiesImage)
+  Future<List<HistoriesImage>> historiesImage();
+
+  @GET(ApiConstants.historiesVideo)
+  Future<List<HistoriesVideo>> historiesVideo();
+
+  @GET(ApiConstants.historiesText)
+  Future<List<HistoriesText>> historiesText();
 }

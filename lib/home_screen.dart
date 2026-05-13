@@ -14,18 +14,6 @@ import 'widgets/how_it_works_section.dart';
 import 'widgets/about_section.dart';
 import 'widgets/glow_circle.dart';
 
-/// [HomeScreen] is the main landing page of the AI Detection Platform.
-/// 
-/// This screen follows the "Cyber Teal" visual identity, characterized by:
-/// *   **Deep Blue/Dark Backgrounds:** Using a gradient from [ColorsManager.bgStart] to [ColorsManager.bgEnd].
-/// *   **Teal Primary Accents:** Using [ColorsManager.primary] for key elements and calls to action.
-/// *   **Neon Cyber Aesthetic:** Incorporating glowing orbs ([GlowCircle]) and neural network background animations.
-/// *   **Modern Typography:** Using the 'Tajawal' font family for a clean, professional Arabic look.
-/// 
-/// The screen features several animated components:
-/// *   `NeuralNetworkPainter`: A background animation simulating a connected AI network.
-/// *   `HomeLogo`: An animated central logo.
-/// *   `ScannerMockup`: A visual representation of the AI scanning process.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

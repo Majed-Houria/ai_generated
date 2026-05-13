@@ -7,11 +7,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'auth/logic/login_cubit.dart';
 import 'auth/logic/register_cubit.dart';
+import 'auth/ui/login_screen.dart';
 import 'constants/asset_paths.dart';
 import 'di/dependency_injection.dart';
 import 'features_pages/logic/detect_image_cubit.dart';
 import 'features_pages/logic/detect_text_cubit.dart';
 import 'features_pages/logic/detect_video_cubit.dart';
+import 'features_pages/logic/histories_image_cubit.dart';
+import 'features_pages/logic/histories_text_cubit.dart';
+import 'features_pages/logic/histories_video_cubit.dart';
 import 'home_screen.dart';
 import 'localization/localization_service.dart';
 
@@ -66,6 +70,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           BlocProvider(create: (context) => getIt<RegisterCubit>()),
           BlocProvider(create: (context) => getIt<LoginCubit>()),
           BlocProvider(create: (context) => getIt<DetectVideoCubit>()),
+          BlocProvider(create: (context) => getIt<HistoriesImageCubit>()),
+          BlocProvider(create: (context) => getIt<HistoriesVideoCubit>()),
+          BlocProvider(create: (context) => getIt<HistoriesTextCubit>()),
         ],
         child : MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -74,7 +81,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           supportedLocales: context.supportedLocales,
 
           locale: context.locale,
-          home: HomeScreen(),
+          home: LoginScreen(),
         ),
       ),
     );

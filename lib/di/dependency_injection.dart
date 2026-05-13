@@ -10,6 +10,9 @@ import '../features_pages/data/web_services/detect_web_service.dart';
 import '../features_pages/logic/detect_image_cubit.dart';
 import '../features_pages/logic/detect_text_cubit.dart';
 import '../features_pages/logic/detect_video_cubit.dart';
+import '../features_pages/logic/histories_image_cubit.dart';
+import '../features_pages/logic/histories_text_cubit.dart';
+import '../features_pages/logic/histories_video_cubit.dart';
 import '../networking/dio_factory.dart';
 
 final getIt = GetIt.instance;
@@ -43,6 +46,15 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<DetectTextCubit>(
     () => DetectTextCubit(getIt<DetectRepository>()),
+  );
+  getIt.registerFactory<HistoriesImageCubit>(
+    () => HistoriesImageCubit(getIt<DetectRepository>()),
+  );
+  getIt.registerFactory<HistoriesVideoCubit>(
+    () => HistoriesVideoCubit(getIt<DetectRepository>()),
+  );
+  getIt.registerFactory<HistoriesTextCubit>(
+    () => HistoriesTextCubit(getIt<DetectRepository>()),
   );
 
   getIt.registerLazySingleton<RegisterCubit>(() => RegisterCubit(getIt<AuthRepository>()));

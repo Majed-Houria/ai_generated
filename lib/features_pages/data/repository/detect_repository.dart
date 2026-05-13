@@ -5,6 +5,9 @@ import '../../../../networking/api_result.dart';
 import '../models/detect_image.dart';
 import '../models/detect_text.dart';
 import '../models/detect_video.dart';
+import '../models/histories_image.dart';
+import '../models/histories_text.dart';
+import '../models/histories_video.dart';
 import '../web_services/detect_web_service.dart';
 
 class DetectRepository {
@@ -42,4 +45,33 @@ class DetectRepository {
     }
   }
 
+  Future<ApiResult<List<HistoriesImage>>> historiesImage() async {
+    try {
+      final result = await detectWebService.historiesImage();
+
+      return ApiResult.success(result);
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResult<List<HistoriesVideo>>> historiesVideo() async {
+    try {
+      final result = await detectWebService.historiesVideo();
+
+      return ApiResult.success(result);
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResult<List<HistoriesText>>> historiesText() async {
+    try {
+      final result = await detectWebService.historiesText();
+
+      return ApiResult.success(result);
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
 }

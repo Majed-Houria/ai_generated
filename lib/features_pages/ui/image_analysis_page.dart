@@ -212,7 +212,7 @@ class _ImageAnalysisPageState extends State<ImageAnalysisPage> with TickerProvid
             ),
           ),
           Text(
-            isAi ? 'محتوى ذكاء اصطناعي محتمل' : 'محتوى بشري أصلي',
+            isAi ? 'النتيجة محتوى ذكاء اصطناعي محتمل' : 'النتيجة محتوى بشري أصلي',
             style: GoogleFonts.tajawal(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,

@@ -12,7 +12,7 @@ part of 'auth_web_service.dart';
 
 class _AuthWebService implements AuthWebService {
   _AuthWebService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://192.168.110.17:3000/';
+    baseUrl ??= 'https://ai-generated.obaidana.xyz/';
   }
 
   final Dio _dio;

@@ -149,7 +149,7 @@ class LoginScreen extends StatelessWidget {
                               ..onTap = () {
                                 Navigator.pushReplacementNamed(
                                   context,
-                                  Routes.registerSelectionScreen,
+                                  Routes.registerScreen,
                                 );
                               },
                           ),

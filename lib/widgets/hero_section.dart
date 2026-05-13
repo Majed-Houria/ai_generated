@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
+import '../routing/routes.dart';
 import '../theming/colors.dart';
 import 'animated_button.dart';
 
@@ -103,10 +104,10 @@ class HeroSection extends StatelessWidget {
             ),
             SizedBox(width: 16.w),
             AnimatedButton(
-              text: 'اعرف المزيد',
+              text: 'السجل السابق',
               isPrimary: false,
               themeColor: ColorsManager.accent,
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, Routes.historySelectorPage),
             ),
           ],
         ),

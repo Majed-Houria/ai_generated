@@ -9,6 +9,7 @@ import '../../routing/routes.dart';
 import '../../theming/colors.dart';
 import '../../widgets/custom_text_form_field.dart';
 import '../logic/register_cubit.dart';
+import 'widgets/login_bloc_listener.dart';
 import 'widgets/register_bloc_listener.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -184,7 +185,11 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const RegisterBlocListener(),
+                  RegisterBlocListener(
+                    emailController: emailController,
+                    passwordController: passwordController,
+                  ),
+                  LoginBlocListener(),
                 ],
               ),
             ),

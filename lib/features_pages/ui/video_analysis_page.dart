@@ -104,7 +104,7 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
             BlocBuilder<DetectVideoCubit, DetectVideoState>(
               builder: (context, state) {
                 return state.maybeWhen(
-                  success: (data) => _buildResultSection(data),
+                  success: (data) => _buildDetailedResultSection(data),
                   orElse: () => _buildInstructionsSection(),
                 );
               },
@@ -152,24 +152,35 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
           ),
         ),
         SizedBox(height: 12.h),
-        _buildInstructionItem(
-          LucideIcons.checkCircle2,
-          'ارفع مقطع فيديو بتنسيق MP4 أو MOV.',
-        ),
-        _buildInstructionItem(
-          LucideIcons.checkCircle2,
-          'سيقوم النظام بتحليل الإطارات للكشف عن التلاعب (Deepfake).',
-        ),
-        _buildInstructionItem(
-          LucideIcons.checkCircle2,
-          'تأكد من وضوح الوجوه في الفيديو للحصول على أدق النتائج.',
-        ),
+        _buildInstructionItem(LucideIcons.fileVideo, 'ارفع مقطع فيديو بتنسيق MP4 أو MOV.'),
+        _buildInstructionItem(LucideIcons.scanFace, 'سيقوم النظام بتحليل الإطارات للكشف عن التلاعب (Deepfake).'),
+        _buildInstructionItem(LucideIcons.shieldCheck, 'تأكد من وضوح الوجوه للحصول على أدق النتائج.'),
       ],
     );
   }
 
-  Widget _buildResultSection(DetectVideo data) {
-    // Calculating average AI probability from all frames
+  Widget _buildInstructionItem(IconData icon, String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Row(
+        children: [
+          Icon(icon, color: ColorsManager.warning, size: 20.r),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.tajawal(
+                fontSize: 14.sp,
+                color: ColorsManager.textSecondary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailedResultSection(DetectVideo data) {
     double totalAiProb = 0;
     if (data.frames.isNotEmpty) {
       for (var frame in data.frames) {
@@ -179,68 +190,132 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
     }
     
     final isAi = totalAiProb > 50;
+    final statusColor = isAi ? ColorsManager.warning : ColorsManager.success;
 
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        color: (isAi ? ColorsManager.warning : ColorsManager.success).withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(
-          color: (isAi ? ColorsManager.warning : ColorsManager.success).withValues(alpha: 0.3),
-        ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(24.r),
+          decoration: BoxDecoration(
+            color: statusColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(24.r),
+            border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+          ),
+          child: Column(
             children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: 100.r,
+                    width: 100.r,
+                    child: CircularProgressIndicator(
+                      value: totalAiProb / 100,
+                      strokeWidth: 8,
+                      backgroundColor: Colors.white10,
+                      color: statusColor,
+                    ),
+                  ),
+                  Text(
+                    '${totalAiProb.toStringAsFixed(0)}%',
+                    style: GoogleFonts.tajawal(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
               Text(
-                'متوسط احتمالية التزييف',
+                isAi ? 'تم اكتشاف تلاعب عميق' : 'الفيديو يبدو موثوقاً',
                 style: GoogleFonts.tajawal(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w800,
+                  color: statusColor,
                 ),
               ),
-              Icon(
-                isAi ? LucideIcons.alertTriangle : LucideIcons.checkCircle2,
-                size: 30.r,
-                color: isAi ? ColorsManager.warning : ColorsManager.success,
+              SizedBox(height: 8.h),
+              Text(
+                isAi 
+                  ? 'هذا الفيديو يحتوي على علامات تشير إلى استخدام الذكاء الاصطناعي'
+                  : 'لم يتم العثور على أدلة قوية تشير إلى تزييف عميق',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.tajawal(
+                  fontSize: 13.sp,
+                  color: ColorsManager.textSecondary,
+                ),
               ),
             ],
           ),
-          SizedBox(height: 20.h),
+        ),
+        
+        if (data.frames.isNotEmpty) ...[
+          SizedBox(height: 32.h),
           Text(
-            '${totalAiProb.toStringAsFixed(1)}%',
+            'تفاصيل الإطارات المنبثقة (${data.frames.length})',
             style: GoogleFonts.tajawal(
-              fontSize: 40.sp,
-              fontWeight: FontWeight.w900,
-              color: isAi ? ColorsManager.warning : ColorsManager.success,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
             ),
           ),
-          Text(
-            isAi ? 'تم اكتشاف تلاعب عميق محتمل' : 'الفيديو يبدو أصلياً',
-            style: GoogleFonts.tajawal(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: ColorsManager.textSecondary,
+          SizedBox(height: 16.h),
+          SizedBox(
+            height: 110.h,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: data.frames.length,
+              separatorBuilder: (context, index) => SizedBox(width: 12.w),
+              itemBuilder: (context, index) {
+                final frame = data.frames[index];
+                final prob = frame.type.aiGenerated * 100;
+                final frameIsAi = prob > 50;
+                
+                return Container(
+                  width: 90.w,
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  decoration: BoxDecoration(
+                    color: ColorsManager.cardBg,
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(
+                      color: frameIsAi ? ColorsManager.warning.withValues(alpha: 0.5) : Colors.white10,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'إطار #${frame.info.position}',
+                        style: GoogleFonts.tajawal(
+                          fontSize: 11.sp,
+                          color: ColorsManager.textSecondary,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        '${prob.toStringAsFixed(1)}%',
+                        style: GoogleFonts.tajawal(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w800,
+                          color: frameIsAi ? ColorsManager.warning : ColorsManager.success,
+                        ),
+                      ),
+                      Icon(
+                        frameIsAi ? LucideIcons.alertCircle : LucideIcons.check,
+                        size: 14.r,
+                        color: frameIsAi ? ColorsManager.warning : ColorsManager.success,
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
-          if (data.frames.isNotEmpty) ...[
-            SizedBox(height: 20.h),
-            Divider(color: Colors.white10),
-            SizedBox(height: 10.h),
-            Text(
-              'عدد الإطارات التي تم فحصها: ${data.frames.length}',
-              style: GoogleFonts.tajawal(
-                fontSize: 12.sp,
-                color: ColorsManager.textSecondary,
-              ),
-            ),
-          ]
         ],
-      ),
+      ],
     );
   }
 
@@ -251,31 +326,34 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
           onTap: _pickVideo,
           child: Container(
             width: double.infinity,
-            height: 220.h,
+            height: 200.h,
             decoration: BoxDecoration(
-              color: ColorsManager.cardBg.withValues(alpha: 0.5),
+              color: ColorsManager.cardBg,
               borderRadius: BorderRadius.circular(24.r),
               border: Border.all(
-                color: ColorsManager.warning.withValues(alpha: 0.3),
-                width: 2,
+                color: ColorsManager.warning.withValues(alpha: 0.2),
+                width: 1.5,
               ),
             ),
             child: _selectedVideo == null
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        LucideIcons.video,
-                        color: ColorsManager.warning,
-                        size: 60.r,
+                      Container(
+                        padding: EdgeInsets.all(16.r),
+                        decoration: BoxDecoration(
+                          color: ColorsManager.warning.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(LucideIcons.video, color: ColorsManager.warning, size: 40.r),
                       ),
                       SizedBox(height: 16.h),
                       Text(
-                        'اضغط لاختيار ملف فيديو (MP4)',
+                        'اضغط لاختيار مقطع فيديو',
                         style: GoogleFonts.tajawal(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: ColorsManager.textSecondary,
+                          color: ColorsManager.textPrimary,
                         ),
                       ),
                     ],
@@ -283,27 +361,15 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        LucideIcons.fileVideo,
-                        color: ColorsManager.warning,
-                        size: 60.r,
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        _selectedVideo!.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.tajawal(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: ColorsManager.textPrimary,
-                        ),
-                      ),
-                      Text(
-                        'جاهز للفحص',
-                        style: GoogleFonts.tajawal(
-                          fontSize: 12.sp,
-                          color: ColorsManager.success,
+                      Icon(LucideIcons.fileVideo, color: ColorsManager.warning, size: 50.r),
+                      SizedBox(height: 12.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Text(
+                          _selectedVideo!.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.tajawal(fontSize: 13.sp, color: ColorsManager.textPrimary),
                         ),
                       ),
                     ],
@@ -311,7 +377,6 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
           ),
         ),
         
-        // Scanner Overlay
         if (_selectedVideo != null)
            BlocBuilder<DetectVideoCubit, DetectVideoState>(
             builder: (context, state) {
@@ -322,20 +387,16 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
             },
           ),
 
-        // Remove Button
         if (_selectedVideo != null)
           Positioned(
-            top: 10.h,
-            left: 10.w,
+            top: 12.r,
+            left: 12.r,
             child: GestureDetector(
               onTap: _clearData,
-              child: Container(
-                padding: EdgeInsets.all(5.r),
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(LucideIcons.x, color: Colors.white, size: 20.r),
+              child: CircleAvatar(
+                radius: 14.r,
+                backgroundColor: Colors.black54,
+                child: Icon(LucideIcons.x, color: Colors.white, size: 16.r),
               ),
             ),
           ),
@@ -344,8 +405,6 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
   }
 
   Widget _buildScannerOverlay() {
-    if (_scanController == null) return const SizedBox.shrink();
-
     return Positioned.fill(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24.r),
@@ -355,19 +414,15 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
             return Stack(
               children: [
                 Positioned(
-                  top: _scanController!.value * 220.h,
+                  top: _scanController!.value * 200.h,
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: 4.h,
+                    height: 2.h,
                     decoration: BoxDecoration(
                       color: ColorsManager.warning,
                       boxShadow: [
-                        BoxShadow(
-                          color: ColorsManager.warning,
-                          blurRadius: 15,
-                          spreadRadius: 2,
-                        ),
+                        BoxShadow(color: ColorsManager.warning, blurRadius: 10, spreadRadius: 2),
                       ],
                     ),
                   ),
@@ -378,10 +433,15 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        ColorsManager.warning.withValues(alpha: 0.1),
-                        ColorsManager.warning.withValues(alpha: 0.0),
+                        ColorsManager.warning.withValues(alpha: 0.05),
+                        ColorsManager.warning.withValues(alpha: 0.15),
+                        ColorsManager.warning.withValues(alpha: 0.05),
                       ],
-                      stops: [(_scanController!.value), (_scanController!.value + 0.1).clamp(0, 1)],
+                      stops: [
+                        (_scanController!.value - 0.2).clamp(0, 1),
+                        _scanController!.value,
+                        (_scanController!.value + 0.2).clamp(0, 1),
+                      ],
                     ),
                   ),
                 ),
@@ -389,29 +449,6 @@ class _VideoAnalysisPageState extends State<VideoAnalysisPage> with TickerProvid
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget _buildInstructionItem(IconData icon, String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: ColorsManager.warning, size: 20.r),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Text(
-              text,
-              style: GoogleFonts.tajawal(
-                fontSize: 14.sp,
-                color: ColorsManager.textSecondary,
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
