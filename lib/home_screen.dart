@@ -169,10 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               children: [
                                 SizedBox(height: 30.h),
                                 // Centered Animated Logo
-                                HomeLogo(
-                                  floatAnimation: _floatController,
-                                  scanAnimation: _scanController,
-                                ),
+                                HomeLogo(),
                                 SizedBox(height: 30.h),
                                 HeroSection(
                                   floatAnimation: _floatController,

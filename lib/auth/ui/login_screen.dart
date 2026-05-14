@@ -1,3 +1,4 @@
+import 'package:ai_generated/widgets/custom_safe_area.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +22,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomSafeArea(child:  Scaffold(
       body: Container(
         height: double.infinity,
         decoration: const BoxDecoration(
@@ -164,6 +165,6 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }
